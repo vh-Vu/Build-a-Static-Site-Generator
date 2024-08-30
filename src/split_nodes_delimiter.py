@@ -73,6 +73,4 @@ def text_to_textnodes(text):
                 split_nodes_image(
                     split_nodes_delimiter(
                         split_nodes_delimiter(
-                            split_nodes_delimiter([TextNode(text,text_type_text)],'**',text_type_bold),
-                        '*',text_type_italic),
-                    '`',text_type_code))))
+                            split_nodes_delimiter([TextNode(text,text_type_text)],'**',text_type_bold),'*',text_type_italic),'`',text_type_code))))
