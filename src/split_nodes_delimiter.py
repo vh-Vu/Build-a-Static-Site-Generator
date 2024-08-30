@@ -34,14 +34,8 @@ def helper_for_link_or_image(sections,text,text_type):
            split_nodes.append(TextNode(text,text_type_text))
            return split_nodes
     split_string =""
-    print(text_type_text)
     for section in sections:
         split_string = text.split(f'[{section[0]}]({section[1]})') if text_type == text_type_link else text.split(f'![{section[0]}]({section[1]})')
-        # if text_type == text_type_link :
-        #     split_string = text.split(f'[{section[0]}]({section[1]})') 
-        # else:
-        #     split_string = text.split(f'![{section[0]}]({section[1]})')
-        
         lstring = split_string[0]
         text = split_string[1]
         if lstring !="":
@@ -49,7 +43,6 @@ def helper_for_link_or_image(sections,text,text_type):
         split_nodes.append(TextNode(section[0],text_type,section[1]))
     if text !="":
         split_nodes.append(TextNode(text,text_type_text)) 
-    #split_nodes.append(TextNode(text,text_type_text))
     return split_nodes
 
 def split_nodes_link(node):
@@ -72,3 +65,14 @@ def split_nodes_image(node):
         new_nodes.extend(helper_for_link_or_image(sections,old_node.text,text_type_image))
     return new_nodes
 
+
+
+
+def text_to_textnodes(text):
+    return (split_nodes_link(
+                split_nodes_image(
+                    split_nodes_delimiter(
+                        split_nodes_delimiter(
+                            split_nodes_delimiter([TextNode(text,text_type_text)],'**',text_type_bold),
+                        '*',text_type_italic),
+                    '`',text_type_code))))
