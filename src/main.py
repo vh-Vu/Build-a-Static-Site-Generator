@@ -28,14 +28,26 @@ def copy_static(source,destination):
         return
     copy_and_paste(source,destination)
     print("Copy Sucessfully!")
-    
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    list_content = os.listdir(dir_path_content)
+    if list_content:
+        for content in list_content:
+            current_dir = os.path.join(dir_path_content,content)
+            if os.path.isfile(current_dir):
+                generate_page(current_dir,template_path,dest_dir_path)
+            else:
+                new_dir = os.path.join(dest_dir_path,content)
+                os.mkdir(new_dir)
+                generate_pages_recursive(current_dir,template_path,new_dir)
+    return
 
 def main():
    
     copy_static(static_path,public_path)
-    generate_page(os.path.join(content_path,'index.md'),template_path,public_path)
+    generate_pages_recursive(content_path,template_path,public_path)
 
-    #print(source,destination)
 
 
 

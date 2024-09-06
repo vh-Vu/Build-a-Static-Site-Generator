@@ -94,13 +94,13 @@ def generate_page(from_path, template_path, dest_path):
     with open(from_path,'r',encoding='utf-8') as con:
         md_content = con.read()
     content = markdown_to_html_node(md_content)
-    print(content)
     title = extract_title(md_content)
     with open(template_path,'r',encoding='utf-8') as file:
         html_content = file.read()
     html_output = html_content.replace("{{ Title }}", title)
     html_output = html_output.replace("{{ Content }}", content.to_html())
-    with open(os.path.join(dest_path,'index.html'),'w',encoding='utf-8') as file:
+    file_name = os.path.splitext(os.path.basename(from_path))[0] + '.html'
+    with open(os.path.join(dest_path,file_name),'w',encoding='utf-8') as file:
         file.write(html_output)
     print("Genera Successfully!")
 
