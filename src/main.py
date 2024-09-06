@@ -1,6 +1,13 @@
 from textnode import TextNode
+from blocks import generate_page
 import os
 import shutil
+
+dir_path = os.path.dirname(os.path.dirname(__file__))
+template_path = os.path.join(dir_path,'template.html')
+static_path = os.path.join(dir_path,'static')
+public_path = os.path.join(dir_path,'public')
+content_path = os.path.join(dir_path,'content')
 
 def copy_static(source,destination):
     delete_item =lambda path_dir: os.remove(path_dir) if os.path.isfile(path_dir) else shutil.rmtree(path_dir)
@@ -21,12 +28,13 @@ def copy_static(source,destination):
         return
     copy_and_paste(source,destination)
     print("Copy Sucessfully!")
+    
 
 def main():
-    dir_path = os.path.dirname(os.path.dirname(__file__))
-    source = os.path.join(dir_path,'static')
-    destination = os.path.join(dir_path,'public')
-    copy_static(source,destination)
+   
+    copy_static(static_path,public_path)
+    generate_page(os.path.join(content_path,'index.md'),template_path,public_path)
+
     #print(source,destination)
 
 

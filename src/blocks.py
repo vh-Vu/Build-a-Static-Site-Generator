@@ -1,4 +1,5 @@
 import re
+import os
 from split_nodes_delimiter import text_to_textnodes
 from htmlnode import *
 from textnode import *
@@ -81,7 +82,27 @@ def markdown_to_html_node(markdown):
         content.append(handing_block(block_to_block_type(block),block))
     return ParentNode('div',content)
 
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if get_heading(block) == 1:
+            return block.lstrip('# ')
+    raise Exception('No title')
 
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    with open(from_path,'r',encoding='utf-8') as con:
+        md_content = con.read()
+    content = markdown_to_html_node(md_content)
+    print(content)
+    title = extract_title(md_content)
+    with open(template_path,'r',encoding='utf-8') as file:
+        html_content = file.read()
+    html_output = html_content.replace("{{ Title }}", title)
+    html_output = html_output.replace("{{ Content }}", content.to_html())
+    with open(os.path.join(dest_path,'index.html'),'w',encoding='utf-8') as file:
+        file.write(html_output)
+    print("Genera Successfully!")
 
 
 def excute():
@@ -105,8 +126,7 @@ def handing_block(block_type, content):
     if block_type ==  markdown_block_heading:
         return ParentNode(f'h{get_heading(content)}',excute()(content.lstrip('# ')))
     elif block_type == markdown_block_code:
-        text = content.strip('```')
-        return ParentNode('pre',[LeafNode('code',content.lstrip('```').strip())])
+        return ParentNode('pre',[LeafNode('code',content.strip('```').strip())])
     elif block_type == markdown_block_quote:
         block_quote_list = []
         for line in content.split('\n'):
